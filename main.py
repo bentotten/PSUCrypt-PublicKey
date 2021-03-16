@@ -133,7 +133,6 @@ def encrypt():
     g = int(raw_split[1])
     e2 = int(raw_split[2])
     
-    # LOOP UNTIL END OF FILE! M MUST BE SMALLED THAN P
     cipherfile = open("ctext.txt", "a+")
     with open("ptext.txt") as f:
         block = 1
@@ -156,8 +155,6 @@ def encrypt():
     
     cipherfile.close
             
-
-    
     
 def encryption_math(p, g, e2):
     k = random.randrange(1, (p-1))
@@ -173,11 +170,70 @@ def get_pubkey():
     return raw_key.split()
 
 
-
-
 def decrypt():
     print("\nDecryption Started\n")
+    raw_split = get_prikey()
+    p = int(raw_split[0])
+    g = int(raw_split[1])
+    d = int(raw_split[2])
     
+    plaintextfile = open("plaintext.txt", "a+")
+    with open("ctext.txt") as f:
+        block = 1
+        msg = []
+        
+        while block:
+            c2 = []
+            
+            block = f.readlines(1)
+            if(block):
+                c1 = get_c1(block)
+                c2_hold = get_c2(block)
+                
+                c2 = list(c2_hold)
+                print(c2)
+
+                t = (p-1-d)
+                x = pow(c1, t, p)
+                
+                for i in range(4):
+                    h = c2[i] % p
+                    msg[i] = (x*h) % p
+                print(msg)
+                
+            
+    plaintextfile.close
+
+
+def get_prikey():
+    f = open("prikey.txt", "r")
+    raw_key = f.read()
+    f.close()
+    return raw_key.split()
+
+
+def decryption_math(p, g, d):
+    k = random.randrange(1, (p-1))
+    x = pow(e2, k, p)
+    c1 = pow(g, k, p)
+    return [c1, x]
+
+
+def get_c1(block):
+    c1 = ""
+    for i in range(len(block[0])):
+        if block[0][i] != " ":
+            c1 += block[0][i]
+        else:
+            return int(c1)
+
+
+def get_c2(block):
+    splitIndex = block[0].index(" ")
+    c2 = block[0][splitIndex:]
+    return c2
+
+            
 
 if __name__ == "__main__":
     main()
