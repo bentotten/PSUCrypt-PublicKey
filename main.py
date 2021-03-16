@@ -1,6 +1,5 @@
 # CS585 Cryptography
 # Ben Totten
-# My Take on rijndael 
 
 import random  # Future: use system random number generator instead
 from functools import partial
