@@ -5,7 +5,8 @@
 import random  # Future: use system random number generator instead
 
 primeBits = 32 
-numberOfRabinTrials = 20 
+numberOfRabinTrials = 40 
+seed = 0
 # Pre generated primes 
 first_primes_list = [2, 3, 5, 7, 11, 13, 17, 19, 23, 29, 
                      31, 37, 41, 43, 47, 53, 59, 61, 67,  
@@ -17,13 +18,10 @@ first_primes_list = [2, 3, 5, 7, 11, 13, 17, 19, 23, 29,
                      263, 269, 271, 277, 281, 283, 293, 
                      307, 311, 313, 317, 331, 337, 347, 349]
 
+
 def main():
-    menu()
-
-
-def menu():
     print("~~~ MENU ~~~\n")
-    print("1) Key Generation\n2) Encryption \n3) Decryption\n")
+    print("\n1) Key Generation\n2) Encryption \n3) Decryption\n")
     selection = input("Input: ")
     
     while selection != "1" and selection != "2" and selection != "3":
@@ -31,7 +29,7 @@ def menu():
         selection = input("Input: ")
     
     if selection is "1":
-        keygen()
+        print(keygen())
     elif selection is "2":
         encrypt()
     elif selection is "3":
@@ -41,16 +39,34 @@ def menu():
 
 
 ## KEY GENERATION ##
-# Select a large prime p (and test for primality)
-# Select d in the group {1, ..., p-2} such that 1 <= d <= (p-2)
-# Select e_1 to be a primitive root in the group {1, ..., p-1}
+# DONE Select a large prime p (and test for primality)
+# DONE Select d in the group {1, ..., p-2} such that 1 <= d <= (p-2)
+# DONE Select g to be a primitive root in the group {1, ..., p-1}
 # e_2 <- e_1^d mod p
 # public_key <- (e_1, e_2, p)
 # private_key <- d
 # return public_key, private_key
 def keygen():
+    seed = input("Seed Number: ")
+    random.seed(seed)
+    
     print("\nGenerating Key\n")
-    print(find_prime())
+    p = find_prime()
+    d = random.randrange(1, (p-2))
+    # g = random.randrange(1, (p-1))
+    g = 2
+    e2 = pow(g, d, p)   # Faster version of (g^d) % p
+    
+    print("\nPublic Key: ", p, g, e2)
+    print("\nPrivate Key: ", p, g, d)
+    
+    f = open("pubkey.txt", "w")
+    f.write(str(p) + " " + str(g) + " " + str(e2))
+    f. close()
+    
+    f = open("prikey.txt", "w")
+    f.write(str(p) + " " + str(g) + " " + str(d))
+    f.close()
 
 
 def find_prime():
@@ -60,7 +76,6 @@ def find_prime():
         if not isMillerRabinPassed(primeCandidate):
             continue
         else:
-            print("\nFound Prime: \n", primeCandidate)
             return primeCandidate
         
 
@@ -109,6 +124,23 @@ def isMillerRabinPassed(mrc):
 
 def encrypt():
     print("\nEncryption Started\n")
+    get_pubkey()
+
+
+def get_pubkey():
+    f = open("pubkey.txt", "r")
+    raw_key = f.read()
+    f.close()
+    
+    print("\nRaw key: ", raw_key)
+    
+    raw_split = raw_key.split()
+    p = raw_split[0]
+    g = raw_split[1]
+    e2 = raw_split[2]
+    
+    print("Key: " + p + " " + g + " " + e2)
+
 
 
 def decrypt():

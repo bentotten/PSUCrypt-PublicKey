@@ -1,3 +1,7 @@
+# Keys
+prikey.txt
+pubkey.txt
+
 # Byte-compiled / optimized / DLL files
 __pycache__/
 *.py[cod]
