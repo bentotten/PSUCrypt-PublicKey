@@ -180,10 +180,10 @@ def decrypt():
     plaintextfile = open("plaintext.txt", "a+")
     with open("ctext.txt") as f:
         block = 1
-        msg = [0]*4
         
         while block:
             c2 = []
+            msg = ""
             
             block = f.readlines(1)
             if(block):
@@ -198,8 +198,9 @@ def decrypt():
                 
                 for i in range(4):
                     h = c2[i] % p
-                    msg[i] = chr((x*h) % p)
+                    msg += chr((x*h) % p)
                 print(msg)
+                plaintextfile.write(msg)
                 
             
     plaintextfile.close
