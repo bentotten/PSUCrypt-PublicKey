@@ -42,9 +42,9 @@ def main():
 
 
 ## KEY GENERATION ##
-# DONE Select a large prime p (and test for primality)
-# DONE Select d in the group {1, ..., p-2} such that 1 <= d <= (p-2)
-# DONE Select g to be a primitive root in the group {1, ..., p-1}
+# Select a large prime p (and test for primality)
+# Select d in the group {1, ..., p-2} such that 1 <= d <= (p-2)
+# Select g to be a primitive root in the group {1, ..., p-1}
 # e_2 <- e_1^d mod p
 # public_key <- (e_1, e_2, p)
 # private_key <- d
@@ -126,6 +126,7 @@ def isMillerRabinPassed(mrc):
 
 
 def encrypt():
+
     print("\nEncryption Started\n")
     raw_split = get_pubkey()
     p = int(raw_split[0])
@@ -133,19 +134,29 @@ def encrypt():
     e2 = int(raw_split[2])
     
     # LOOP UNTIL END OF FILE! M MUST BE SMALLED THAN P
-    # Thank you https://stackoverflow.com/questions/15599639/what-is-the-perfect-counterpart-in-python-for-while-not-eof
+    cipherfile = open("ctext.txt", "a+")
     with open("ptext.txt") as f:
         block = 1
         while block:
+            c2 = [0] * 4
             block = f.read(4)
-            m = list(map(ord, block))
-            print(m)
-            '''
-            result = encryption_math(p, g, e2)
-            c1 = result[0]
-            c2 = (block * result[1]) % p
-            print(c1 + " " + c2)
-            '''
+            if(block):
+                msg = list(map(ord, block))   # Convert to ASCII values
+            
+                result = encryption_math(p, g, e2)
+
+                c1 = result[0]
+            
+                for i in range(4):
+                    c2[i] = (msg[i] * result[1]) % p
+            
+                print("\nC1: " + str(c1) + "\nC2: " + str(c2))
+
+                cipherfile.write(str(c1) + " " + str(c2) + "\n")
+    
+    cipherfile.close
+            
+
     
     
 def encryption_math(p, g, e2):
