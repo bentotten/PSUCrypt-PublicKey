@@ -146,7 +146,7 @@ def encrypt():
 
                 c1 = result[0]
             
-                for i in range(4):
+                for i in range(len(msg)):
                     c2[i] = (msg[i] * result[1]) % p
             
                 print("\nC1: " + str(c1) + "\nC2: " + str(c2))
