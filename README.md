@@ -2,3 +2,5 @@
 Run program with `python3 main.py`
 
 This is a python version of elGamal for CS585 Cryptography
+
+Python 3.9.1
