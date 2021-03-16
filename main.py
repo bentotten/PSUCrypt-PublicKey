@@ -188,10 +188,10 @@ def decrypt():
             block = f.readlines(1)
             if(block):
                 c1 = get_c1(block)
-                c2_hold = get_c2(block)
+                c2_hold = get_c2(block).strip().strip("[").strip("]")
                 
-                c2 = list(c2_hold)
-                print(c2)
+                c2_temp = list(c2_hold.split(','))
+                c2 = [int(x) for x in c2_temp]
 
                 t = (p-1-d)
                 x = pow(c1, t, p)
@@ -210,13 +210,6 @@ def get_prikey():
     raw_key = f.read()
     f.close()
     return raw_key.split()
-
-
-def decryption_math(p, g, d):
-    k = random.randrange(1, (p-1))
-    x = pow(e2, k, p)
-    c1 = pow(g, k, p)
-    return [c1, x]
 
 
 def get_c1(block):
