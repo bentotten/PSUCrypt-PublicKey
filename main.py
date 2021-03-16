@@ -202,7 +202,6 @@ def decrypt():
                 print(msg)
                 plaintextfile.write(msg)
                 
-            
     plaintextfile.close
 
 
