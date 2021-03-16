@@ -3,8 +3,9 @@
 # My Take on rijndael 
 
 import random  # Future: use system random number generator instead
+from functools import partial
 
-primeBits = 32 
+primeBits = 33 
 numberOfRabinTrials = 40 
 seed = 0
 # Pre generated primes 
@@ -29,13 +30,15 @@ def main():
         selection = input("Input: ")
     
     if selection is "1":
-        print(keygen())
+        keygen()
     elif selection is "2":
         encrypt()
     elif selection is "3":
         decrypt()
     else:
         return 1
+
+    return 0
 
 
 ## KEY GENERATION ##
@@ -124,22 +127,40 @@ def isMillerRabinPassed(mrc):
 
 def encrypt():
     print("\nEncryption Started\n")
-    get_pubkey()
-
-
+    raw_split = get_pubkey()
+    p = int(raw_split[0])
+    g = int(raw_split[1])
+    e2 = int(raw_split[2])
+    
+    # LOOP UNTIL END OF FILE! M MUST BE SMALLED THAN P
+    # Thank you https://stackoverflow.com/questions/15599639/what-is-the-perfect-counterpart-in-python-for-while-not-eof
+    with open("ptext.txt") as f:
+        block = 1
+        while block:
+            block = f.read(4)
+            m = list(map(ord, block))
+            print(m)
+            '''
+            result = encryption_math(p, g, e2)
+            c1 = result[0]
+            c2 = (block * result[1]) % p
+            print(c1 + " " + c2)
+            '''
+    
+    
+def encryption_math(p, g, e2):
+    k = random.randrange(1, (p-1))
+    x = pow(e2, k, p)
+    c1 = pow(g, k, p)
+    return [c1, x]
+    
+    
 def get_pubkey():
     f = open("pubkey.txt", "r")
     raw_key = f.read()
     f.close()
-    
-    print("\nRaw key: ", raw_key)
-    
-    raw_split = raw_key.split()
-    p = raw_split[0]
-    g = raw_split[1]
-    e2 = raw_split[2]
-    
-    print("Key: " + p + " " + g + " " + e2)
+    return raw_key.split()
+
 
 
 
